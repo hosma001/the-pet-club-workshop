@@ -21,11 +21,11 @@ app.put('/api/pets/:id', async(req, res, next)=> {
   try {
     const SQL = `
       UPDATE pets
-      SET user_id = $1, name = $2
+      SET owner_id = $1, name = $2
       WHERE id = $3
       RETURNING *
     `;
-    const response = await client.query(SQL, [req.body.user_id, req.body.name, req.params.id]);
+    const response = await client.query(SQL, [req.body.owner_id, req.body.name, req.params.id]);
     res.send(response.rows[0]);
   } catch (error) {
     next(error);
@@ -34,7 +34,7 @@ app.put('/api/pets/:id', async(req, res, next)=> {
 
 app.get('/api/pets', async(req, res, next)=>{
   try {
-    const response = await client.query('SELECT * FROM pets');
+    const response = await client.query('SELECT * FROM pets ORDER BY id');
     res.send(response.rows);    
   } catch (error) {
     next(error);
